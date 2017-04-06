@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+</head>
+<style>
+	body {
+		background-color: black;
+		color: white;
+		font-family: 'Source Code Pro';
+		text-align: center;
+	}
+	.the-price {
+		font-size: 35px;
+	}
+	.up {
+		color: green;
+	}
+	.noChange {
+		color: grey;
+	}
+	.down {
+		color: red;
+	}
+</style>
+<body style="-webkit-app-region: drag">
+	<h3>Current Share Price: GOOGL</h3>
+	<div class="the-price" price id="price"></div>
+	<div class="up-down" id="priceHistory"></div>
+	<script>
+		var request = require('request');
+		setInterval (function() {
+			request ('https://finance.google.com/finance/info?client=ig&q=goog', function (error, response, body) {
+			body = body.slice(3);
+			body = JSON.parse(body);
+			console.log(body);
+			newPrice(body);
+			});
+		}, 1000);
+		
+		var lastPrice;
+		function newPrice(arr) {
+			currentPrice = arr[0]["l"];
+			var history = document.getElementById("priceHistory");
+			if (lastPrice<currentPrice) {
+				var newElText = "⇧ ";
+				var wrap = document.createElement("span");
+				wrap.className = "up";
+			} 
+			else if (lastPrice==currentPrice) {
+				var newElText = "⇋ ";
+				var wrap = document.createElement("span");
+				wrap.className = "noChange";
+			}
+			else {
+				var newElement = "⇩ ";
+				var wrap = document.createElement("span");
+				wrap.className = "down";
+			}
+			history.appendChild(wrap);
+			var textNode = document.createTextNode(newElText);
+			wrap.appendChild(textNode);
+			var nodeList = history.getElementsByTagName("SPAN").length;
+			if (nodeList==6) {
+				history.children[0].remove();
+			}
+			document.getElementById("price").innerHTML = currentPrice;
+			lastPrice=currentPrice;
+		}
+	</script>
+</body>
+</html>

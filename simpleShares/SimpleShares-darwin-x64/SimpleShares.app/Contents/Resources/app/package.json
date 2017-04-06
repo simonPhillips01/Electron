@@ -1,0 +1,9 @@
+{
+  "name"    : "Simple-Shares",
+  "version" : "0.1.0",
+  "main"    : "main.js",
+  "scripts" : {
+  	"start": "electron .",
+  	"build": "electron-packager . SimpleShares --platform=darwin --arch=x64 --version=1.0.0 --overwrite"
+  }
+}
